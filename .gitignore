@@ -1,0 +1,39 @@
+/build/
+/target/
+
+# use glob syntax.
+syntax: glob
+*.class
+
+# logs
+*.log
+
+# eclipse conf file
+.settings
+.settings/
+.classpath
+.project
+
+
+# building
+target
+tmp*
+dist
+bin/
+
+# Intellij IDEA
+.idea/
+*.iml
+
+.metadata
+bin/
+tmp/
+target/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+.recommenders

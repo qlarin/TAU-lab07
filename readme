@@ -1,0 +1,56 @@
+Zasoby:
+1. GET; http://localhost:8080/samplerest/rest/film; pobranie listy filmów;
+2. GET; http://localhost:8080/samplerest/rest/film; pobranie filmu o podanym id;
+3. GET; http://localhost:8080/samplerest/rest/comment; pobranie listy komentarzy;
+4. GET; http://localhost:8080/samplerest/rest/film/actor; pobranie listy aktorów;
+5. GET; http://localhost:8080/samplerest/rest/value; pobranie listy ocen;
+6. GET; http://localhost:8080/samplerest/rest/filmactor; pobranie listy aktorów wraz z filmami;
+7. GET; http://localhost:8080/samplerest/rest/film/{id_actor}/filmsByActor; pobranie listy filmów danego aktora;
+8. GET; http://localhost:8080/samplerest/rest/film/{filmId}/actorsFromFilm; pobranie filmu z listą aktorów;
+
+9. POST; http://localhost:8080/samplerest/rest/film; dodanie filmu;
+10.POST; http://localhost:8080/samplerest/rest/film/{id_filmu}/comment; dodanie kometarza do wybranego filmu;
+11.POST; http://localhost:8080/samplerest/rest/film/actor; dodanie aktora;
+12.POST; http://localhost:8080/samplerest/rest/film/{id_filmu}/value; dodanie oceny do wybranego filmu;
+13.POST; http://localhost:8080/samplerest/rest/filmactor; dodanie powiązania film - aktor;
+
+14. PUT; http://localhost:8080/samplerest/rest/film/{id_filmu}; aktualizacja info o wybranym filmie;
+15. PUT; http://localhost:8080/samplerest/rest/comment/{id}; aktualizacja komentarza;
+16. PUT; http://localhost:8080/samplerest/rest/film/actor/{id_actor}; aktualizacja info o wybranym aktorze;
+17. PUT; http://localhost:8080/samplerest/rest/value/{id_value}; aktualizacja oceny wybranego filmu;
+
+18. DELETE; http://localhost:8080/samplerest/rest/film/{id_filmu}; usunięcie filmu;
+19. DELETE; http://localhost:8080/samplerest/rest/comment/{id}; usunięcie komentarza;
+20. DELETE; http://localhost:8080/samplerest/rest/film/actor/{id}; usunięcie aktora;
+21. DELETE; http://localhost:8080/samplerest/rest/filmactor/{id_powiazania}; usunięcie powiązania film - aktor;
+22. DELETE; http://localhost:8080/samplerest/rest/value/{id_oceny}; usunięcie wybranej oceny;
+
+
+Przykłady POST/PUT:
+1. Film;
+{
+  "title":"Myszka Miki",
+  "description":"o niczym"
+}
+
+2. Komentarz:
+{
+	"description":"kompletne dno" 
+}
+
+3. Aktor:
+{
+  "name":"James",
+  "surname":"Bond"
+}
+
+4. Ocena:
+{
+  "value":"3.0"
+}
+
+5. Powiązanie film - aktor:
+{
+  "filmId":"1",
+  "actorId":"1"
+}
