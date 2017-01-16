@@ -26,7 +26,6 @@ import javax.xml.bind.annotation.XmlTransient;
 	@NamedQuery(name="product.byName", query="SELECT p FROM Product p where p.name=:name"),
 	@NamedQuery(name="product.byCategory", query="SELECT p FROM Product p where p.category=:category")
 	})
-
 public class Product {
 
 	@Id

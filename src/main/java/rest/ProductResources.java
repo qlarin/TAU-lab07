@@ -21,7 +21,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import domain.Comment;
-//import domain.Comment;
 import domain.Product;
 
 @Path("/product")
