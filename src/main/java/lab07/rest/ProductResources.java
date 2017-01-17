@@ -1,13 +1,10 @@
 
-package rest;
+package lab07.rest;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -20,42 +17,38 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import domain.Comment;
-import domain.Product;
+import lab07.domain.Product;
+import lab07.service.ProductManager;
 
-@Path("/product")
-@Stateless
+@Path("products")
 public class ProductResources {
 
-	@PersistenceContext
-	EntityManager em;
-	
-	// ------------------PRODUCT------------------//
+	private ProductManager pm = new ProductManager();
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Product> getAll() {
-		return em.createNamedQuery("product.all", Product.class).getResultList();
+		return pm.getAllProducts();
 	}
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response addProduct(Product product) {
-		em.persist(product);
-		return Response.ok("Dodano produkt o id " + product.getId() + " i tytule: " + product.getName()).build();
+		pm.addProduct(product);
+		return Response.status(201).entity(product).build();
 	}
 
 	@GET
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response get(@PathParam("id") int id) {
-		Product product = em.createNamedQuery("product.id",Product.class).setParameter("product", id).getSingleResult();
+	public Response get(@PathParam("id") Long id) {
+		Product product = pm.getProduct(id);
 		if (product == null) {
 			return Response.status(404).build();
 		}
 		return Response.ok(product).build();
 	}
-	
+/*	
 	@GET
 	@Path("/searchByPrice")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -116,34 +109,5 @@ public class ProductResources {
 		em.remove(product);
 		return Response.ok("usunięto produkt " + id).build();
 	}
-
-	// ------------------KOMENTARZ------------------//
-
-	@GET
-	@Path("/{productId}/comment")
-	@Produces(MediaType.APPLICATION_JSON)
-	public List<Comment> getComment(@PathParam("productId") int commentId) {
-		Product product = em.createNamedQuery("product.id",Product.class).setParameter("productId", commentId).getSingleResult();
-		if (product == null)
-			return new ArrayList<>();
-		if (product.getComments() == null)
-			product.setComments(new ArrayList<Comment>());
-		return product.getComments();
-	}
-
-	@POST
-	@Path("/{id}/comment")
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response addComment(@PathParam("id") int productId, Comment comment) {
-		Product product = em.createNamedQuery("product.id",Product.class).setParameter("productId", productId).getSingleResult();
-		if (product == null)
-			return Response.status(404).build();
-		if (product.getComments() == null)
-			product.setComments(new ArrayList<Comment>());
-		product.getComments().add(comment);
-//		comment.setProduct(product);
-		em.persist(comment);
-		return Response.ok("Dodano komentarz do produktu " + product.getId() + " " + product.getName()).build();
-	}
-
+*/
 }

@@ -10,7 +10,7 @@
  
    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
 
-		<jta-data-source>jdbc/demoapps</jta-data-source>
+		<jta-data-source>jdbc/lab07</jta-data-source>
 		
 		<properties>
 			<!-- Properties for Hibernate (default provider for JBoss AS) -->

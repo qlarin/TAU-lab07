@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <dataset>
-  <PRODUCT ID="1" NAME="dysk" PRICE="199.80" CATEGORY="HARD_DISK"/>
-  <PRODUCT ID="2" NAME="płyta główna" PRICE="133.99" CATEGORY="MAINBOARD"/>
-  <PRODUCT ID="3" NAME="karta graficzna" PRICE="499.67" CATEGORY="GRAPHIC_CARD"/>
+  <PRODUCT NAME="dysk" PRICE="199.80" CATEGORY="HARD_DISK"/>
+  <PRODUCT NAME="płyta główna" PRICE="133.99" CATEGORY="MAINBOARD"/>
+  <PRODUCT NAME="karta graficzna" PRICE="499.67" CATEGORY="GRAPHIC_CARD"/>
 </dataset>
