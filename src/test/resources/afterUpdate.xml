@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+  <PRODUCT NAME="płyta główna" PRICE="133.99" CATEGORY="MAINBOARD"/>
+  <PRODUCT NAME="karta graficzna" PRICE="499.67" CATEGORY="GRAPHIC_CARD"/>
+  <PRODUCT NAME="pamiec absolutna" PRICE="33.20" CATEGORY="MEMORY"/>
+</dataset>

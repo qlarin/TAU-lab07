@@ -10,6 +10,9 @@ import java.sql.DriverManager;
 import java.sql.Statement;
 import java.math.BigDecimal;
 
+import org.hamcrest.Matchers;
+import static org.hamcrest.Matchers.is;
+
 import org.dbunit.Assertion;
 import org.dbunit.IDatabaseTester;
 import org.dbunit.JdbcDatabaseTester;
@@ -81,6 +84,18 @@ public class ProductServiceRESTDBTest {
     }
 
     @Test
+    public void getProduct() throws Exception {
+
+        given()
+        .contentType("application/json")
+        .when()
+        .get("/products/0")
+        .then()
+        .body("name", is("dysk"))
+        .statusCode(200);
+    }
+
+    @Test
     public void addProduct() throws Exception {
         Product aProduct = new Product();
         aProduct.setName("pamiec");
@@ -100,6 +115,53 @@ public class ProductServiceRESTDBTest {
         
         IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(
             new File("src/test/resources/productData.xml"));
+        ITable expectedTable = expectedDataSet.getTable("PRODUCT");
+        
+        Assertion.assertEquals(expectedTable, filteredTable);
+    }
+
+    @Test
+    public void deleteProduct() throws Exception {
+        given()
+        .pathParam("id", 0)
+        .when()
+        .delete("/products/{id}")
+        .then()
+        .statusCode(200);
+
+        IDataSet dbDataSet = connection.createDataSet();
+        ITable actualTable = dbDataSet.getTable("PRODUCT");
+        ITable filteredTable = DefaultColumnFilter.excludedColumnsTable(actualTable, new String[]{"ID"});
+        
+        IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(
+            new File("src/test/resources/afterDelete.xml"));
+        ITable expectedTable = expectedDataSet.getTable("PRODUCT");
+        
+        Assertion.assertEquals(expectedTable, filteredTable);
+    }
+
+    @Test
+    public void updateProduct() throws Exception {
+        Product aProduct = new Product();
+        aProduct.setName("pamiec absolutna");
+        aProduct.setPrice(new BigDecimal(33.20));
+        aProduct.setCategory(Product.Category.valueOf("MEMORY"));
+
+        given()
+        .contentType("application/json")
+        .body(aProduct)
+        .pathParam("id", 3)
+        .when()
+        .put("/products/{id}")
+        .then()
+        .statusCode(200);
+
+        IDataSet dbDataSet = connection.createDataSet();
+        ITable actualTable = dbDataSet.getTable("PRODUCT");
+        ITable filteredTable = DefaultColumnFilter.excludedColumnsTable(actualTable, new String[]{"ID"});
+        
+        IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(
+            new File("src/test/resources/afterUpdate.xml"));
         ITable expectedTable = expectedDataSet.getTable("PRODUCT");
         
         Assertion.assertEquals(expectedTable, filteredTable);

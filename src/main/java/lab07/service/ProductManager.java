@@ -64,7 +64,7 @@ public class ProductManager {
 			updateProductStmt = connection
 				.prepareStatement("UPDATE Product SET name = ?, price = ?, category = ? where id = ?");
 			deleteProductStmt = connection
-				.prepareStatement("DELETE Product WHERE id = ?");
+				.prepareStatement("DELETE FROM Product where id = ?");
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -163,30 +163,26 @@ public class ProductManager {
 		return products;
 	}
 
-	public int updateProduct(Long id, Product product) {
-		int count = 0;
+	public void updateProduct(Long id, Product product) {
 		try {
 			updateProductStmt.setString(1, product.getName());
 			updateProductStmt.setBigDecimal(2, product.getPrice());
 			updateProductStmt.setString(3, product.getCategory().name());
-			updateProductStmt.setLong(1, id);
-			count = addProductStmt.executeUpdate();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return count;
-	}
-
-	public int deleteProduct(Long id) {
-		int count = 0;
-		try {
-			deleteProductStmt.setLong(1, id);
-			count = deleteProductStmt.executeUpdate();
+			updateProductStmt.setLong(4, id);
+			updateProductStmt.executeUpdate();
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return count;
+	}
+
+	public void deleteProduct(Long id) {
+		try {
+			deleteProductStmt.setLong(1, id);
+			deleteProductStmt.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }
