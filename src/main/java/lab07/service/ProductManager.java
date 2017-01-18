@@ -24,6 +24,10 @@ public class ProductManager {
 	private PreparedStatement deleteAllProductsStmt;
 	private PreparedStatement getAllProductsStmt;
 	private PreparedStatement getProductByIdStmt;
+	private PreparedStatement getProductByPriceStmt;
+	private PreparedStatement getProductByNameStmt;
+	private PreparedStatement updateProductStmt;
+	private PreparedStatement deleteProductStmt;
 
 	private Statement statement;
 
@@ -46,13 +50,21 @@ public class ProductManager {
 				statement.executeUpdate(CREATE_TABLE_PRODUCT);
 
 			addProductStmt = connection
-					.prepareStatement("INSERT INTO Product (name, price, category) VALUES (?, ?, ?)");
+				.prepareStatement("INSERT INTO Product (name, price, category) VALUES (?, ?, ?)");
 			deleteAllProductsStmt = connection
-					.prepareStatement("DELETE FROM Product");
+				.prepareStatement("DELETE FROM Product");
 			getAllProductsStmt = connection
-					.prepareStatement("SELECT id, name, price, category FROM Product");
+				.prepareStatement("SELECT id, name, price, category FROM Product");
 			getProductByIdStmt = connection
-					.prepareStatement("SELECT id, name, price, category FROM Product where id = ?");
+				.prepareStatement("SELECT id, name, price, category FROM Product where id = ?");
+			getProductByPriceStmt = connection
+				.prepareStatement("SELECT id, name, price, category FROM Product where price >= ? and price <= ?");
+			getProductByNameStmt = connection
+				.prepareStatement("SELECT id, name, price, category FROM Product where name = ?");
+			updateProductStmt = connection
+				.prepareStatement("UPDATE Product SET name = ?, price = ?, category = ? where id = ?");
+			deleteProductStmt = connection
+				.prepareStatement("DELETE Product WHERE id = ?");
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -63,13 +75,8 @@ public class ProductManager {
 		return connection;
 	}
 
-    public List<Product> getAllProducts() {
-		List<Product> products = new ArrayList<Product>();
-
-		try {
-			ResultSet rs = getAllProductsStmt.executeQuery();
-
-			while (rs.next()) {
+	public List<Product> prepareProducts(ResultSet rs, List<Product> products) throws SQLException {
+		while (rs.next()) {
 				Product p = new Product();
 				p.setId(rs.getLong("id"));
 				p.setName(rs.getString("name"));
@@ -77,6 +84,15 @@ public class ProductManager {
 				p.setCategory(Product.Category.valueOf(rs.getString("category").toString()));
 				products.add(p);
 			}
+		return products;
+	}
+
+    public List<Product> getAllProducts() {
+		List<Product> products = new ArrayList<Product>();
+
+		try {
+			ResultSet rs = getAllProductsStmt.executeQuery();
+			products = prepareProducts(rs, products);
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -115,7 +131,62 @@ public class ProductManager {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-
 		return p;
+	}
+
+	public List<Product> getProductByPrice(BigDecimal min, BigDecimal max) {
+		List<Product> products = new ArrayList<Product>();
+
+		try {
+			getProductByPriceStmt.setBigDecimal(1, min);
+			getProductByPriceStmt.setBigDecimal(2, max);
+			ResultSet rs = getProductByPriceStmt.executeQuery();
+			products = prepareProducts(rs, products);
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return products;
+	}
+
+	public List<Product> getProductByName(String name) {
+		List<Product> products = new ArrayList<Product>();
+
+		try {
+			getProductByNameStmt.setString(1, name);
+			ResultSet rs = getProductByNameStmt.executeQuery();
+			products = prepareProducts(rs, products);
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return products;
+	}
+
+	public int updateProduct(Long id, Product product) {
+		int count = 0;
+		try {
+			updateProductStmt.setString(1, product.getName());
+			updateProductStmt.setBigDecimal(2, product.getPrice());
+			updateProductStmt.setString(3, product.getCategory().name());
+			updateProductStmt.setLong(1, id);
+			count = addProductStmt.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return count;
+	}
+
+	public int deleteProduct(Long id) {
+		int count = 0;
+		try {
+			deleteProductStmt.setLong(1, id);
+			count = deleteProductStmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return count;
 	}
 }
